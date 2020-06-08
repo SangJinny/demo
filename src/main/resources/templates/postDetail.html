@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세</title>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+</head>
+<body>
+<div class="container">
+    <h2>게시글 상세</h2>
+    <table class="post_detail">
+        <colgroup>
+            <col width="15%"/>
+            <col width="35%"/>
+            <col width="15%"/>
+            <col width="35%"/>
+        </colgroup>
+        <caption>게시글 상세내용</caption>
+        <tbody id="postTbody">
+        </tbody>
+    </table>
+
+    <table class="post_detail">
+        <colgroup>
+            <col width="10%"/>
+            <col width="15%"/>
+            <col width="10%"/>
+            <col width="30%"/>
+            <col width="10%"/>
+            <col width="25%"/>
+        </colgroup>
+        <tbody id="commentListTbody">
+        </tbody>
+    </table>
+    <button id="editButton" class="btn">수정하기</button>
+    <button id="deleteButton" class="btn">삭제하기</button>
+    <button id="listButton" class="btn"> <a href="/postList.html" >목록으로</a></button>
+    <button id="newCommentButton" class="btn"><a id="newCommentLink" href="/comment.html">댓글쓰기</a></button>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+        $.ajax({
+            type: "GET",
+            url: "/posts/"+postId,
+            success: function (response) {
+                if(response) {
+                    $("#postTbody").append("<tr>" +
+                        "<th scope='row'>글 번호</th><td id='postId'>"+response.id+"</td>" +
+                        "<th scope='row'>작성자</th><td id='postWriter'>"+response.writer+"</td></tr>" +
+                        "<tr><th scope='row'>작성일<td>"+response.createdAt+"</td>" +
+                        "<th scope='row'>수정일시</th><td>"+response.updatedAt+"</td></tr>" +
+                        "<tr><th scope='row'>제목</th><td colspan='3' id='postTitle'>"+response.title+"</td></tr>" +
+                        "<tr><td colspan='4'><textarea title='내용' id='postContent'>"+response.content+"</textarea></td></tr>"
+                        );
+                    $("#newCommentLink").attr("href", "/comment.html?postId="+response.id);
+
+                    const commentList = response.commentList;
+                    if(commentList) {
+                        for(let i = 0 ; i < commentList.length ; i++) {
+                            $("#commentListTbody").append("<tr>"+
+                                "<th scope='row'>댓글 작성자</th><td>"+commentList[i].writer+"</td>"+
+                                "<th scope='row'>댓글 내용</th><td>"+commentList[i].content+"</td>"+
+                                "<th scope='row'>댓글 작성일</th><td>"+commentList[i].createdAt+"</td></tr>"
+                            )
+                        }
+
+                    }
+                } else {
+                    $("#postTbody").append("<tr>" +
+                        "<td colspan='4'>"+response.message+"</td>" +
+                        "</tr>");
+                }
+            }
+        });
+
+
+        $("#editButton").on("click", function(){
+            var id = $("#postId").text();
+            var title = $("#postTitle").text();
+            var content = $("#postContent").val();
+            console.log(content);
+            $.ajax({
+                type: "PUT",
+                url: "/posts/"+id,
+                dataType: "json",
+                contentType:"application/json; charset=utf-8",
+                data: JSON.stringify({
+                    title: title,
+                    content: content
+                }),
+                success: function (response) {
+                    if(response.id) {
+                        alert(JSON.stringify(response));
+                    } else {
+                        alert(response.message);
+                    }
+                    window.location.href = '/postList.html';
+                }
+            });
+        });
+
+        $("#deleteButton").on("click", function(){
+            var id = $("#postId").text();
+            $.ajax({
+                type: "DELETE",
+                url: "/posts/"+id,
+                dataType: "json",
+                contentType:"application/json; charset=utf-8",
+                success: function (response) {
+                    alert('삭제 성공');
+                    window.location.href = '/postList.html';
+                }
+            });
+
+        });
+    });
+</script>
+</body>
+</html>

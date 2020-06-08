@@ -1,0 +1,33 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+def springBootVersion = '2.3.0.RELEASE'
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: springBootVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version :springBootVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version :springBootVersion
+    //providedRuntime group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: springBootVersion
+
+    runtime group: 'com.h2database', name: 'h2', version: '1.4.200'
+    
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}

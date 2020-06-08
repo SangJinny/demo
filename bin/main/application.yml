@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./db/test;
+    username: sa
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    database: h2
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+  thymeleaf:
+    prefix: classpath:templates/
+    check-template-location: true
+    suffix: .html
+    mode: HTML5
+    cache: false

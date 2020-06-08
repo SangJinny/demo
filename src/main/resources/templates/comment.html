@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board</title>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+</head>
+<body>
+<div class="container">
+    <h2>댓글 등록</h2>
+    <table class="comment_detail">
+        <tr>
+            <td>작성자</td>
+            <td><input type="text" id="commentWriter" name="writer"/></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td colspan="2">
+                <textarea id="commentContent" name="content"></textarea>
+            </td>
+        </tr>
+    </table>
+    <button id="submitCommentButton" class="btn">등록</button>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('postId');
+
+        $("#submitCommentButton").on("click", function() {
+            $.ajax({
+                type: "POST",
+                url: "/posts/"+postId+"/comments",
+                dataType: "json",
+                contentType:"application/json; charset=utf-8",
+                data: JSON.stringify({
+                    writer: $("#commentWriter").val(),
+                    content: $("#commentContent").val()
+                }),
+                success: (response) => {
+                    if(response) {
+                        alert(JSON.stringify(response));
+                    } else {
+                        alert(response.message);
+                    }
+
+                    window.location.href = '/postDetail.html?id='+postId;
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

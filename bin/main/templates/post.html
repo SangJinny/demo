@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board</title>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+</head>
+<body>
+<div class="container">
+    <h2>게시글 등록</h2>
+    <table class="board_detail">
+        <tr>
+            <td>제목</td>
+            <td><input type="text" id="title" name="title"/></td>
+        </tr>
+        <tr>
+            <td>작성자</td>
+            <td><input type="text" id="writer" name="writer"/></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td colspan="2">
+               <textarea id="content" name="content"></textarea>
+            </td>
+        </tr>
+    </table>
+    <button id="submitButton" class="btn">저장</button>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        $("#submitButton").on("click", () => {
+            $.ajax({
+                type: "POST",
+                url: "/posts",
+                dataType: "json",
+                contentType:"application/json; charset=utf-8",
+                data: JSON.stringify({
+                    title: $("#title").val(),
+                    writer: $("#writer").val(),
+                    content: $("#content").val()
+                }),
+                success: (response) => {
+                    window.location.href = '/postList.html';
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

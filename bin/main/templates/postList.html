@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board</title>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+</head>
+<body>
+<div class="container">
+    <h2>게시글 목록</h2>
+    <table class="post_list">
+        <colgroup>
+            <col width="15%"/>
+            <col width="*"/>
+            <col width="20%"/>
+            <col width="20%"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <th scope="col">글번호</th>
+            <th scope="col">제목</th>
+            <th scope="col">작성일시</th>
+            <th scope="col">수정일시</th>
+        </tr>
+        </thead>
+        <tbody id="postListTbody">
+        </tbody>
+    </table>
+    <a href="/post.html" class="btn">글 쓰기</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.ajax({
+            type: "GET",
+            url: "/posts",
+            success: function (response) {
+               const postList = response.postList;
+               if(postList.length === 0) {
+                   $("#postListTbody").append("<tr>" +
+                       "<td colspan=\"4\">조회된 결과가 없습니다.</td>" +
+                       "</tr>");
+               }
+
+               for(let i = 0 ; i < postList.length ; i++) {
+                   $("#postListTbody").append("<tr>" +
+                       "<td>"+postList[i].id+"</td>" +
+                       "<td><a href='/postDetail.html?id="+postList[i].id+"'>"+postList[i].title+"</a></td>" +
+                       "<td>"+postList[i].createdAt+"</td>" +
+                       "<td>"+postList[i].updatedAt+"</td>" +
+                       "</tr>");
+               }
+            }
+        });
+    });
+</script>
+</body>
+</html>
