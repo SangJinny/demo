@@ -1,23 +1,24 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:./db/test;
-    username: sa
+    driver-class-name: org.h2.Driver  # JDBC Driver 이
+    url: jdbc:h2:file:./db/test;      # DB url
+    username: sa                      # DB username
   jpa:
     hibernate:
-      ddl-auto: update
-    generate-ddl: true
-    database: h2
-    show-sql: true
+      ddl-auto: update                # app 실행시 DDL 실행 정책
+    generate-ddl: true                # app 실행시 DDL 실행 여부 
+    database: h2                      # DB 종류 
+    show-sql: true                    # console-log에 sql 노출 여부 
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
   h2:
     console:
-      enabled: true
+      enabled: true                   # h2 console-client 활성화 여부
+      path: /h2-console               # h2 console path
   thymeleaf:
-    prefix: classpath:templates/
+    prefix: classpath:templates/      # html view root path
     check-template-location: true
     suffix: .html
     mode: HTML5
